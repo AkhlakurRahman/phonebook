@@ -11,9 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/home', function () {
+    return view('phonebook');
 });
 
-Route::get('projects/create', 'ProjectsController@create');
-Route::post('projects', 'ProjectsController@store');
+Route::get('{name}', function() {
+    return redirect('/');
+})->where('name', '[A-Za-z]+');
+
+Route::resource('/phonebook', 'PhonebookController');
+Route::post('/getData', 'PhonebookController@getData');

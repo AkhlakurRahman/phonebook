@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Project;
+use App\Phonebook;
 use Illuminate\Http\Request;
 
-class ProjectsController extends Controller
+class PhonebookController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,12 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        //
+        return view('phonebook');
+    }
+
+    public function getData()
+    {
+        return Phonebook::orderBy('name', 'ASC')->get();
     }
 
     /**
@@ -24,7 +29,7 @@ class ProjectsController extends Controller
      */
     public function create()
     {
-        return view('form.create');
+        //
     }
 
     /**
@@ -37,24 +42,25 @@ class ProjectsController extends Controller
     {
         $this->validate(request(), [
             'name' => 'required',
-            'description' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required',
         ]);
 
-        Project::forceCreate([
-            'name' => request('name'),
-            'description' => request('description'),
-        ]);
-
-        return ['message', 'Project Created'];
+        $phonebook = Phonebook::create(request([
+            'name',
+            'phone_number',
+            'email'
+        ]));
+        return $phonebook;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Project  $project
+     * @param  \App\Phonebook  $phonebook
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show(Phonebook $phonebook)
     {
         //
     }
@@ -62,10 +68,10 @@ class ProjectsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Project  $project
+     * @param  \App\Phonebook  $phonebook
      * @return \Illuminate\Http\Response
      */
-    public function edit(Project $project)
+    public function edit(Phonebook $phonebook)
     {
         //
     }
@@ -74,22 +80,27 @@ class ProjectsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Project  $project
+     * @param  \App\Phonebook  $phonebook
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
+    public function update(Request $request)
     {
-        //
+        $phonebook = Phonebook::find($request->id);
+
+        $phonebook->name = $request->name;
+        $phonebook->phone_number = $request->phone_number;
+        $phonebook->email = $request->email;
+        $phonebook->save();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Project  $project
+     * @param  \App\Phonebook  $phonebook
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Project $project)
+    public function destroy(Phonebook $phonebook)
     {
-        //
+        Phonebook::where('id', $phonebook->id)->delete();
     }
 }

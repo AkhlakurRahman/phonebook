@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+class Phonebook extends Model
 {
     protected $fillable = [
         'name',
-        'description',
+        'phone_number',
+        'email'
     ];
 }
